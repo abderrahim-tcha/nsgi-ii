@@ -10,18 +10,22 @@ st.title("Specifying the problem")
 objective1_coefficient = st.text_input("Enter an coefficient of variables objective 1(comma-separated values, 0 if it dosent exist):")
 objective2_coefficient = st.text_input("Enter an coefficient of variables objective 2(comma-separated values, 0 if it dosent exist):")
 constraint_coefficient = st.text_input("Enter an coefficient of variables constraints(comma-separated values):")
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5, col6 = st.columns(6)
 with col1:
-    borne_constraint = st.number_input("Constraints borne:", value=0)
+    borne_constraint = st.number_input("borne:", value=0)
 with col2:
     num_items = st.number_input("Variables:", value=0)
 with col3:
     num_generations = st.number_input("Generations:", value=0)
 with col4:
     population_size = st.number_input("Population size:", value=0)
+with col5:
+    crossover_rate = st.number_input("Crossover rate:", value=0.0, step=0.01, format="%.2f")
+with col6:
+    mutation_rate = st.number_input("Mutation rate:", value=0.0, step=0.01, format="%.2f")
 
 # Convert the input string to a list
-if objective1_coefficient and objective2_coefficient and constraint_coefficient and borne_constraint and num_items and num_generations and population_size:
+if objective1_coefficient and objective2_coefficient and constraint_coefficient and borne_constraint and num_items and num_generations and population_size and crossover_rate and mutation_rate:
     objective1_array = [int(x) for x in objective1_coefficient.split(',')]
     objective2_array = [int(x) for x in objective2_coefficient.split(',')]
     constraint_array = [int(x) for x in constraint_coefficient.split(',')]
@@ -39,7 +43,7 @@ if objective1_coefficient and objective2_coefficient and constraint_coefficient 
         items.append(item)
 
     # Call the NSGA-II algorithm
-    fitness_history, solution_history = nsga_ii(population_size, items, borne_constraint, 2, num_generations, 0.5, 0.05, num_items)	
+    fitness_history, solution_history = nsga_ii(population_size, items, borne_constraint, 2, num_generations, crossover_rate, mutation_rate, num_items)	
     
     plot_fitness_history(fitness_history)
     sums = [np.sum(pair) for pair in fitness_history]
