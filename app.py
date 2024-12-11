@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,6 +12,7 @@ objective1_coefficient = st.text_input("Enter an coefficient of variables object
 objective2_coefficient = st.text_input("Enter an coefficient of variables objective 2(comma-separated values, 0 if it dosent exist):")
 constraint_coefficient = st.text_input("Enter an coefficient of variables constraints(comma-separated values):")
 col1, col2, col3, col4, col5, col6 = st.columns(6)
+
 with col1:
     borne_constraint = st.number_input("borne:", value=0)
 with col2:
@@ -43,8 +45,12 @@ if objective1_coefficient and objective2_coefficient and constraint_coefficient 
         items.append(item)
 
     # Call the NSGA-II algorithm
-    fitness_history, solution_history = nsga_ii(population_size, items, borne_constraint, 2, num_generations, crossover_rate, mutation_rate, num_items)	
-    
+    start_time = time.time()
+    solution_history, fitness_history = nsga_ii(population_size, items, borne_constraint, 2, num_generations, crossover_rate, mutation_rate, num_items)	
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    st.markdown(f"<span style='color:red'>Time taken by NSGA-II algorithm: {elapsed_time:.2f} seconds</span>", unsafe_allow_html=True)
+
     plot_fitness_history(fitness_history)
     sums = [np.sum(pair) for pair in fitness_history]
     best_index = np.argmax(sums)
@@ -52,7 +58,7 @@ if objective1_coefficient and objective2_coefficient and constraint_coefficient 
     print(solution_history[best_index])
     st.write("Best solution found:")
     st.text(solution_history[best_index])
-    st.write("Fitness:")
+    st.write("Objective functions:")
     st.text(fitness_history[best_index])
 
 
